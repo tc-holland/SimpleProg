@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
+//including some changes bc github wants to be stupid
 function App() {
   return (
     <div className="App">
