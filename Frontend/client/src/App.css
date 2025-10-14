@@ -1,0 +1,64 @@
+/* GENERAL PAGE SETUP */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f4f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* OUTER BOX CONTAINING LOGIN FORM */
+.login-container {
+  max-width: 350px;
+  margin: 100px auto; /* centers the box */
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* FORM LAYOUT */
+.login-form {
+  display: flex;
+  flex-direction: column; /* stacks inputs vertically */
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* TEXT BOX STYLING */
+.login-form input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* BUTTON STYLING */
+button {
+  padding: 10px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* BUTTON HOVER EFFECT */
+button:hover {
+  background-color: #357ab8;
+}
+
+/* FORGOT PASSWORD TEXT/LINK */
+.forgot-password {
+  margin-top: 10px;
+}
+
+.forgot-password a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+/* HOVER UNDERLINE FOR LINK */
+.forgot-password a:hover {
+  text-decoration: underline;
+}
