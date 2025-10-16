@@ -48,14 +48,27 @@ button:hover {
   background-color: #357ab8;
 }
 
-.login-button {
+
+.header-wrapper{
   position: absolute;
   top: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+}
+
+.btn-wrapper{
+  position: absolute;
   right: 20px;
+  display:inline-block;
+}
+
+.login-button {
+  position: relative;
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -64,17 +77,20 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* FORGOT PASSWORD TEXT/LINK */
-.forgot-password {
-  margin-top: 10px;
+.backtolanding{
+  position: absolute;
+  left: 20px;
+  display: inline-block;
+  background-color:white;      
+  border: none;
+  padding: 0;
+  width: fit-content;
+  height: fit-content;         
+  cursor: pointer;
 }
 
-.forgot-password a {
-  color: #4a90e2;
-  text-decoration: none;
-}
-
-/* HOVER UNDERLINE FOR LINK */
-.forgot-password a:hover {
-  text-decoration: underline;
+.backtolanding img{
+  width: 30px;
+  height: 30px;
+  display: block;
 }

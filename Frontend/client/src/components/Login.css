@@ -34,7 +34,7 @@ body {
 }
 
 /* BUTTON STYLING */
-button {
+button[type="submit"] {
   padding: 10px;
   background-color: #4a90e2;
   color: white;
@@ -44,24 +44,59 @@ button {
 }
 
 /* BUTTON HOVER EFFECT */
-button:hover {
+button[type="submit"]:hover {
   background-color: #357ab8;
 }
 
-.signup-button {
+.header-wrapper{
   position: absolute;
   top: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+}
+
+.btn-wrapper{
+  position: absolute;
   right: 20px;
+  display:inline-block;
+}
+
+.signup-button {
+  position: relative;
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .signup-button:hover {
   background-color: #0056b3;
+}
+
+.sutext{
+  text-align: right;
+  padding: 20px;
+}
+
+.backtolanding{
+  position: absolute;
+  left: 20px;
+  display: inline-block;
+  background-color:white;      
+  border: none;
+  padding: 0;
+  width: fit-content;
+  height: fit-content;         
+  cursor: pointer;
+}
+
+.backtolanding img{
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
 /* FORGOT PASSWORD TEXT/LINK */

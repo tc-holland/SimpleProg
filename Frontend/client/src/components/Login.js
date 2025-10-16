@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import "./Login.css"
+import landingIcon from "../assets/testlogo.png"
 
 function Login(){
     const navigate = useNavigate();
@@ -27,9 +28,20 @@ function Login(){
     return(
         // MAIN WRAPPER DIV FOR ENTIRE PAGE
         <div className="login-page">
-            <button type="button" className="signup-button" 
-                    onClick={() => navigate("/signup")}
-            >Sign Up</button>
+            <div className="header-wrapper">
+                <button type="button" className="backtolanding"
+                    onClick={() => navigate("/landing")}
+                >
+                    <img src={landingIcon} alt="Home"/>
+                </button>
+
+                <div className="btn-wrapper">
+                    <a className="sutext">Don't have an account?</a>
+                    <button type="button" className="signup-button" 
+                            onClick={() => navigate("/signup")}
+                    >Sign Up</button>
+                </div>
+            </div>
             
             <div className="login-container">
                 {/* PAGE TITLE */}
