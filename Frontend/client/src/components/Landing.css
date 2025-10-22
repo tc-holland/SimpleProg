@@ -5,8 +5,19 @@
     background-repeat: no-repeat;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.landing-page h1 {
+    font-size: 80px;     
+    font-weight: 800;    
+    color: black;    
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
 }
 
 .buttons{
