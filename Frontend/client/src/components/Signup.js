@@ -71,6 +71,11 @@ function Signup(){
             <button type="button" className="login-button" 
                     onClick={() => navigate("/login")}
             >Log In</button>
+
+	//HOME BUTTON
+	<button type="button" className="home-button"
+		    onClick={() => navigate("/")}
+	    >Home</button>
             
             <div className="signup-container">
                 {/* PAGE TITLE */}
