@@ -32,7 +32,7 @@ function Login(){
                     onClick={() => navigate("/signup")}
             >Sign Up</button>
 
-	//HOME BUTTON
+	{/* HOME BUTTON */}
 	    <button type="button" className="home-button"
 		    onClick={() => navigate("/")}
 	    >Home</button>            
