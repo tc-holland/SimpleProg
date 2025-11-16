@@ -61,7 +61,9 @@ function Signup(){
         }
         catch (err) {
             console.error("Signup error:", err);
-            setResponseMessage(`${err.message}`);
+            //FIXME err.message might expose server internals
+            // setResponseMessage(`${err.message}`);
+            setResponseMessage("Signup failed. Check if this email is already registered or try another email.");
         }
     };
 

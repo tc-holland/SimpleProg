@@ -13,9 +13,6 @@ const saltRounds = 10;
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-//FIXME Temporary Array as a database
-const faux_database = [];
-
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -27,49 +24,55 @@ app.post("/api/signup", async (req, res) => {
 
   console.log("Received signup data: ", username, password);
 
-  //FIXME Add password hashing and STORE IN THE DATABASE HERE!!!
-  faux_database.push(username);
-
-  //FIXME This check may be unnecessary as frontend already checks for empty inputs
+  // Check for missing fields
   if (!username || !password) {
     return res.status(400).json({message: "Missing username or password"});
   }
 
   //Hash passwords
-  bcrypt.genSalt(saltRounds, (err, salt) => {
-  if (err) {
-        console.error('Error hashing password:', err);
-      return;
-  }
-  })
-  const userPassword = password;
-  bcrypt.hash(userPassword, salt, (err, hash) => {
+  bcrypt.genSalt(saltRounds, function(err, salt) {
     if (err) {
-      console.error("Error hashing password:", err);
-      return;
+      console.error("Error salting password");
+      return -1;
     }
-    console.log("Hashed password:", hash);
+    bcrypt.hash(password, salt, async function(err, hash) {
+      if (err) {
+        console.error("Error hashing password");
+        return -1;
+      }
+      
+      // Check for existing users
+      const{data: user, error: errCheck} = await supabase
+        .from('Users')
+        .select('username')
+        .eq('username', username)
+        .maybeSingle();
+
+      if (errCheck) {
+        console.error("Supabase check error:", errCheck);
+        return res.status(400).json({message: "Signup failed", errCheck});
+      }
+      if (user) {
+        // User already exists
+        console.error("User already exists:", user);
+        return res.status(400).json({message: "User already exists"});
+      }
+      else {
+        //FIXME adminBit value necessary still
+        const {data, error} = await supabase
+        .from("Users")
+        .insert([{username: username, passwordHash: hash}]);
+        if (error) {
+          console.error("Supabase insert error:", error);
+          return res.status(400).json({message: "Signup failed", error});
+        }
+
+        res.json({message: "Signup successful!", user: username});
+      }
+
+      console.log(hash);
+    });
   });
-
-  //FIXME Change from users to whatever database logic is created - - - - - - THIS IS WHERE I AM EDITING DATABASE LOGIC. Check for existing users?
-  const {data, error} = await supabase
-  .from("users")
-  .insert([{ username, password }]);
-
-  if (error) {
-    console.error("Supabase insert error:", error);
-    return res.status(400).json({message: "Signup failed", error});
-  }
-
-  res.json({message: "Signup successful!", user: username});
-
-  //FIXME Check for 5 elements in array then print here
-  if (faux_database.length == 5) {
-    console.log("Printing faux database!");
-    for (let i = 0;i < 5;i++) {
-      console.log(faux_database[i]);
-    }
-  }
 });
 
 app.get("/api", (req, res) => {
