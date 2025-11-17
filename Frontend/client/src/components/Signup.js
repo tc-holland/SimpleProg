@@ -14,19 +14,13 @@ function Signup(){
     const [data, setData] = React.useState(null);
     const [responseMessage, setResponseMessage] = useState("");
         
-    //FIXME remove this message test
+    // API message test
     React.useEffect(() => {
     fetch("/api")
         .then((res) => res.json())
         .then((data) => setData(data.message));
     }, []);
 
-    React.useEffect(() => {
-        fetch("/api")
-            .then((res) => res.json())
-            .then((data) => setData(data.message))
-            .catch((err) => console.error("API test failed:", err));
-    }, []);
        
     const handleChange = (e) => {
         setSignupFormData({
@@ -56,8 +50,12 @@ function Signup(){
 
             if (!res.ok) throw new Error(result.message || "Signup failed");
 
+            // Persist token if provided and navigate
+            if (result.token) {
+                localStorage.setItem('authToken', result.token);
+            }
             setResponseMessage(`${result.message}`);
-            //FIXME navigate somewhere after successful login
+            navigate('/');
         }
         catch (err) {
             console.error("Signup error:", err);
@@ -121,7 +119,8 @@ function Signup(){
                 </form>
 
                 {responseMessage && <p>{responseMessage}</p>}
-                <p>{!data ? "Loading..." : data}</p>
+                {/* Message test */}
+                {/* <p>{!data ? "Loading..." : data}</p> */}
             </div>
         </div>
     );
