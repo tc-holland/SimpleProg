@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import "./Login.css"
+import landingIcon from "../assets/testlogo.png"
 
 function Login(){
     const navigate = useNavigate();
