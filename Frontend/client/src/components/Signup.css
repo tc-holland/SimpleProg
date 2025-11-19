@@ -77,16 +77,25 @@ button:hover {
   background-color: #0056b3;
 }
 
-.backtolanding{
+.home-button {
   position: absolute;
-  left: 20px;
-  display: inline-block;
-  background-color:white;      
+  top: 20px;
+  right: 120px;
+  background-color: #007bff;
+  color: white;
   border: none;
-  padding: 0;
-  width: fit-content;
-  height: fit-content;         
+  padding: 10px 16px;
+  border-radius: 6px;
   cursor: pointer;
+}
+
+.home-button:hover {
+  background-color: #5a6268;
+}
+
+/* FORGOT PASSWORD TEXT/LINK */
+.forgot-password {
+  margin-top: 10px;
 }
 
 .backtolanding img{

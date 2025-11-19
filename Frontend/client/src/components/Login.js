@@ -8,6 +8,7 @@ function Login(){
     const[loginFormData, setLoginFormData] = useState({username: "", password: ""});
 
     const [data, setData] = React.useState(null);
+    const [responseMessage, setResponseMessage] = useState("");
     
       React.useEffect(() => {
         fetch("/api")
@@ -20,48 +21,75 @@ function Login(){
         setLoginFormData({...loginFormData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        //call login API here
+
+        const {username, password} = loginFormData;
+
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({username, password})
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) throw new Error(result.message || "Login failed");
+
+            // persist token if provided and navigate to protected page
+            if (result.token) {
+                localStorage.setItem('authToken', result.token);
+            }
+            setResponseMessage(`${result.message}`);
+            navigate('/');
+            //FIXME navigate somewhere after successful login
+        }
+        catch (err) {
+            console.error("Login error:", err);
+            //FIXME err.message might expose server internals
+            // setResponseMessage(`${err.message}`);
+            setResponseMessage("Login failed. Check if your username and password are correct.");
+        }
     };
 
     return(
         // MAIN WRAPPER DIV FOR ENTIRE PAGE
         <div className="login-page">
-            <div className="header-wrapper">
-                <button type="button" className="backtolanding"
-                    onClick={() => navigate("/landing")}
-                >
-                    <img src={landingIcon} alt="Home"/>
-                </button>
+            <button type="button" className="signup-button" 
+                    onClick={() => navigate("/signup")}
+            >Sign Up</button>
 
-                <div className="btn-wrapper">
-                    <a className="sutext">Don't have an account?</a>
-                    <button type="button" className="signup-button" 
-                            onClick={() => navigate("/signup")}
-                    >Sign Up</button>
-                </div>
-            </div>
-            
+	{/* HOME BUTTON */}
+	    <button type="button" className="home-button"
+		    onClick={() => navigate("/")}
+	    >Home</button>            
+
             <div className="login-container">
                 {/* PAGE TITLE */}
                 <h1>Student Login</h1>
 
                 {/* LOGIN FORM STARTS HERE */}
-                <form className="login-form">
+                <form className="login-form" onSubmit={handleSubmit}>
                     <label htmlFor="email">Email:</label> {/* EMAIL LABEL AND INPUT */}
                     <input
                     id="email"
+                    name="username"
                     type="email"
                     placeholder="Enter your email"
+                    value={loginFormData.username}
+                    onChange={handleChange}
                     required
                     />
 
                     <label htmlFor="password">Password:</label> {/* PASSWORD LABEL AND INPUT */}
                     <input
                     id="password"
+                    name="password"
                     type="password"
                     placeholder="Enter your password"
+                    value={loginFormData.password}
+                    onChange={handleChange}
                     required
                     />
 
@@ -72,7 +100,9 @@ function Login(){
                 <p className="forgot-password">
                     <a href="#">Forgot your password?</a>
                 </p>
-                <p>{!data ? "Loading..." : data}</p>
+                {responseMessage && <p>{responseMessage}</p>}
+                {/* Message test */}
+                {/* <p>{!data ? "Loading..." : data}</p> */}
             </div>
         </div>
     );
