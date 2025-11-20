@@ -39,9 +39,10 @@ function Login(){
             // persist token if provided and navigate to protected page
             if (result.token) {
                 localStorage.setItem('authToken', result.token);
+                localStorage.setItem('userEmail', username);
             }
             setResponseMessage(`${result.message}`);
-            navigate('/');
+            navigate('/dashboard');
             //FIXME navigate somewhere after successful login
         }
         catch (err) {

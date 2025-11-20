@@ -1,0 +1,138 @@
+.dashboard-container {
+    width: 80%;
+    margin: 30px auto;
+    font-family: Arial, sans-serif;
+    padding-top: 30px;
+    background-color: #f4faff;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+.dashboard-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.dashboard-user {
+  font-size: 22px;
+  color: #555;
+  margin: 0;
+}
+
+.pastel-yellow {
+  background: #fff7d1;
+}
+
+.pastel-blue {
+  background: #e4f1ff;
+}
+
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  background: #ffe9a8;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  font-size: 32px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 22px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.styled-list {
+  padding-left: 20px;
+  font-size: 18px;
+}
+
+.message-box {
+    background: #f7f7f7;
+    padding: 12px;
+    border-radius: 15px;
+    margin-top: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.message-box p {
+  margin: 5px 0 0;
+  font-size: 17px;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #4a90e2;
+}
+
+
+.puzzle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.puzzle-header button,
+.puzzle-item button {
+    background: #007bff;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.puzzle-header button:hover {
+    background: #005ecb;
+}
+
+.puzzle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.progress.completed {
+    background: #54d169;
+    color: white;
+}
+
+.progress.in-progress {
+    background: #ffd33d;
+    color: #333;
+}
+
+.progress.not-started {
+    background: #d1d1d1;
+    color: #333;
+}
