@@ -54,9 +54,10 @@ function Signup(){
             // Persist token if provided and navigate
             if (result.token) {
                 localStorage.setItem('authToken', result.token);
+                localStorage.setItem('userEmail', username);
             }
             setResponseMessage(`${result.message}`);
-            navigate('/');
+            navigate('/dashboard');
         }
         catch (err) {
             console.error("Signup error:", err);
