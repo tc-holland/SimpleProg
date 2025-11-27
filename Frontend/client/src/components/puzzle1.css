@@ -1,0 +1,324 @@
+.bg {
+    background-color: rgb(229, 249, 255);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 80vw;
+    height: 80vh;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Positioning for an optional close button inside puzzle containers */
+.container {
+    position: relative;
+}
+
+.container-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    padding: 6px;
+    cursor: pointer;
+    color: #475569; /* slate-600 */
+    border-radius: 6px;
+}
+
+.container-close:hover {
+    background: rgba(15, 23, 42, 0.06);
+}
+
+.stack{
+    color: #000000;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.finblank{
+    display: block;
+    flex: 1 1 auto;
+    overflow: auto;
+    padding-bottom: 12px;
+}
+
+.s1 {
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    display: block; /* treat each sentence as a block so inline parts flow naturally */
+    line-height: 1.6;
+    text-align: left;
+}
+
+/* Center the block of sentences while keeping each sentence left-aligned.
+   .center-sentences centers its inner wrapper (shrink-to-fit), and the
+   wrapper's .s1 children are left-aligned so their left edges line up. */
+.center-sentences {
+    text-align: center; /* center the inline-block wrapper */
+}
+
+.center-sentences > div {
+    display: inline-block; /* shrink to fit the widest sentence */
+    text-align: left; /* keep content left-aligned inside the wrapper */
+}
+
+.center-sentences > div .s1 {
+    text-align: left; /* ensure each sentence is left-aligned */
+}
+
+/* Preserve newlines and tabs inside sentence text */
+.sentence-text {
+    white-space: pre-wrap; /* preserves newlines and sequences of spaces */
+    tab-size: 4; /* how many spaces a tab represents */
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    color: #1f2937; /* default text color (slate-800) */
+}
+
+/* Make sure sentence parts (text and blanks) flow inline within the sentence block.
+   Newlines inside `.sentence-text` will break lines and those lines will appear
+   below the blanks if the newline occurs after them; blanks themselves remain
+   inline and will not be split across lines. */
+.s1 > * {
+    display: inline; /* ensure parts are inline elements */
+    vertical-align: middle;
+}
+
+/* Keep blank box contents aligned and prevent the blank from stretching across
+   new lines — the blank will stay on the line and subsequent newline text will
+   render below it. */
+.s1 .blank-box {
+    white-space: nowrap;
+}
+
+/* Styling for inline blank boxes embedded inside sentences */
+.blank-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px; /* allow shrinking when filled */
+    height: 34px;
+    padding: 6px 6px; /* keep small internal horizontal padding */
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 6px;
+    vertical-align: middle;
+    background-color: #f8fafc; /* subtle off-white */
+    box-sizing: border-box;
+    transition: min-width 0.15s ease, margin 0.15s ease;
+}
+
+.blank-box span {
+    font-size: 0.95rem;
+    color: #334155; /* slate-700 */
+}
+
+.blank-box .text-slate-400 {
+    color: #94a3b8; /* placeholder gray */
+    font-size: 0.9rem;
+}
+
+/* Word bank pinned to bottom of the container */
+.word-bank {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: stretch;
+    padding: 12px;
+    border-top: 1px solid #e6eef7;
+    background-color: transparent;
+}
+
+/* list inside the bank that holds individual word items */
+.bank-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px; /* space between words */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Individual word boxes inside the bank */
+.word-box {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: #4f46e5; /* indigo-600 */
+    color: #ffffff;
+    cursor: grab;
+    user-select: none;
+}
+
+.word-box:active {
+    cursor: grabbing;
+}
+
+.word-bank .text-slate-400 {
+    color: #64748b;
+}
+
+/* When a word is placed into a blank, reuse the word-box look but slightly smaller */
+.word-box.in-blank {
+    min-width: 0; /* allow the box to size to its content */
+    padding: 4px 8px; /* internal spacing inside the dropped word */
+    background-color: #4338ca; /* indigo-700 slightly darker for contrast */
+    color: #ffffff !important;
+    font-size: 0.95rem;
+}
+
+/* ensure the dropped word doesn't show its own border when inside blank */
+.blank-box .word-box.in-blank {
+    box-shadow: none;
+}
+
+/* When blank is empty, show a wider drop target; when filled, let it shrink to content */
+.blank-box.empty {
+    min-width: 110px;
+    margin-left: 10px; /* external spacing on either side */
+    margin-right: 10px;
+}
+
+.blank-box.filled {
+    min-width: 0;
+    margin-left: 10px; /* smaller external spacing when filled */
+    margin-right: 10px;
+    padding: 0; /* remove internal padding when filled */
+}
+
+/* Remove button inside the dropped word box */
+.inline-word-with-remove {
+    position: relative;
+    padding-right: 6px; /* make room for the remove button */
+}
+
+.inline-word-with-remove .word-text {
+    display: inline-block;
+    padding-right: 6px;
+}
+
+/* Ensure dropped word text stays white even if other text color classes are applied */
+.inline-word-with-remove .word-text,
+.word-box.in-blank {
+    color: #ffffff !important;
+}
+
+.remove-in-blank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    border: none;
+    color: rgba(255,255,255,0.95);
+    cursor: pointer;
+    padding: 0;
+}
+
+.remove-in-blank .size-3 {
+    width: 14px;
+    height: 14px;
+}
+
+.remove-in-blank:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+/* Action buttons centering and vertical alignment */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #eef2ff; /* light indigo */
+    border: 1px solid #c7d2fe;
+    color: #3730a3;
+    cursor: pointer;
+}
+
+.action-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Return to Dashboard button (visible when all answers are correct) */
+.return-button {
+    background-color: #10b981; /* emerald-500 */
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.return-button:hover {
+    background-color: #059669; /* emerald-600 */
+}
+
+/* Align success message and return button vertically */
+.result-message {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.return-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px; /* match height to message line for vertical centering */
+    padding: 0 12px;
+}
+
+/* Center the results block (success/failure message + optional button) horizontally
+   and let its background wrap the content rather than stretching the full container. */
+.results-block {
+    display: table; /* shrink to fit content */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* extra top padding so the results row has breathing room from content above */
+.results-block {
+    padding-top: 20px;
+}
+
+/* small gap to the left of the button handled by flex gap on the parent */

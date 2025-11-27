@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login"
 import Signup from "./components/Signup";
 import Landing from "./components/Landing";
+import FirstPuzzle from "./components/puzzle1";
+import SecondPuzzle from "./components/puzzle2";
+import ThirdPuzzle from "./components/puzzle3";
 
 function App() {
 
@@ -12,8 +15,11 @@ function App() {
         <Route path="/login" element={<Login />}/>
         <Route path="/signup" element={<Signup />}/>
         <Route path="/landing" element={<Landing />}/>
+        <Route path="/puzzle1" element={<FirstPuzzle />}/>
+        <Route path="/puzzle2" element={<SecondPuzzle />}/>
+        <Route path="/puzzle3" element={<ThirdPuzzle />}/>
         {/*Default route login*/}
-        <Route path="*" element={<Navigate to="/landing" />} />
+        <Route path="*" element={<Navigate to="/puzzle3" />} />
       </Routes>
     </Router>
   );
