@@ -9,14 +9,30 @@ function Landing(){
         <div className="landing-page">
             <h1>SimpleProg</h1>
             <div className="buttons">
+                {/* STUDENT BUTTON */}
                 <button type="button" className="to-signup" 
-                    onClick={() => navigate("/signup")}
-                >Sign Up</button>
-                <button type="button" className="to-login" 
-                    onClick={() => navigate("/login")}
-                >Log In</button>
-            </div>
-        </div>
+                    onClick={() => {
+            localStorage.setItem("role", "student");
+            navigate("/student/auth");
+          }}
+        >
+          Student
+        </button>
+
+        {/* TEACHER BUTTON */}
+        <button
+          type="button"
+          className="to-login"
+          onClick={() => {
+            localStorage.setItem("role", "teacher");
+            navigate("/teacher/auth");
+          }}
+        >
+          Teacher
+        </button>
+
+      </div>
+    </div>
     );
 }
 

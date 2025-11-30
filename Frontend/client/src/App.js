@@ -8,6 +8,10 @@ import FirstPuzzle from "./components/puzzle1";
 import SecondPuzzle from "./components/puzzle2";
 import ThirdPuzzle from "./components/puzzle3";
 import Dashboard from "./components/Dashboard";
+import TeacherSignup from "./components/TeacherSignup";
+import TeacherDashboard from "./components/TeacherDashboard";
+import StudentAuth from "./components/StudentAuth";
+import TeacherAuth from "./components/TeacherAuth";
 
 function App() {
 
@@ -21,6 +25,10 @@ function App() {
         <Route path="/puzzle2" element={<SecondPuzzle />}/>
         <Route path="/puzzle3" element={<ThirdPuzzle />}/>
         <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="/teacher-signup" element={<TeacherSignup />}/>
+        <Route path="/teacher-dashboard" element={<TeacherDashboard />}/>
+        <Route path="/student/auth" element={<StudentAuth />}/>
+        <Route path="/teacher/auth" element={<TeacherAuth />}/>
         {/*Default route login*/}
         <Route path="*" element={<Navigate to="/landing" />} />
       </Routes>
