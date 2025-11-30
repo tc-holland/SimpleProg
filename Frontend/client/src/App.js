@@ -22,7 +22,7 @@ function App() {
         <Route path="/puzzle3" element={<ThirdPuzzle />}/>
         <Route path="/dashboard" element={<Dashboard />}/>
         {/*Default route login*/}
-        <Route path="*" element={<Navigate to="/puzzle3" />} />
+        <Route path="*" element={<Navigate to="/landing" />} />
       </Routes>
     </Router>
   );

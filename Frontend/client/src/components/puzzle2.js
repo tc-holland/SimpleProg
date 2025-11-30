@@ -5,6 +5,7 @@ import { DropZone } from "./DropZone";
 //import { Button } from "./components/ui/button";
 import { CheckCircle2, XCircle, RotateCcw } from "lucide-react";
 import { useDrag } from "react-dnd";
+import { useNavigate } from "react-router-dom";
 import "./puzzle1.css";
 
 const puzzleData = {
@@ -27,6 +28,7 @@ export default function Puzzle2() {
   const [droppedWords, setDroppedWords] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [lockedBlanks, setLockedBlanks] = useState(new Set());
+  const navigate = useNavigate();
 
   const InlineDraggableWord = ({ word }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -122,7 +124,8 @@ export default function Puzzle2() {
     <DndProvider backend={HTML5Backend}>
       <div className="bg">
         <div className="container">
-          <button className="container-close" aria-label="Close">×</button>
+          <button className="container-close" aria-label="Close"
+          onClick={() => navigate("/dashboard")}>×</button>
           <div className="title">
             <h1>Write a Function</h1>
             <p>Drag each code segment to the correct line to make an addition function</p>

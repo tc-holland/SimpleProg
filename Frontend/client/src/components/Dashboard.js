@@ -10,6 +10,12 @@ function Dashboard() {
     const [notifications, setNotifications] = useState([]);
     const [messages, setMessages] = useState([]);
 
+    const [puzzles] = useState([
+            { id: 1, title: "Puzzle 1", route: "/puzzle1" },
+            { id: 2, title: "Puzzle 2", route: "/puzzle2" },
+            { id: 3, title: "Puzzle 3", route: "/puzzle3" }   
+        ]);
+
     useEffect(() => {
         const user = localStorage.getItem("userEmail");
         const token = localStorage.getItem("authToken");
@@ -20,12 +26,6 @@ function Dashboard() {
         }
 
         if (user) setEmail(user);
-
-        //setPuzzles([
-          //  { id: 1, title: "Puzzle 1", status: "In Progress" },
-            //{ id: 2, title: "Puzzle 2", status: "Completed" },
-            //{ id: 3, title: "Puzzle 3", status: "Not Started" }   
-        //]);
 
         setNotifications([
             "Your puzzle 'Puzzle 1' is due tomorrow.",
@@ -79,33 +79,23 @@ return (
         ))}
       </div>
         
-        {/*}
+        {/* Puzzles */}
         <div className="dashboard-card">
-        <div className="puzzle-header">
-          <h3>Your Puzzles</h3>
-          <button onClick={() => navigate("/puzzles")}>
-            View All
-          </button>
-        </div>
+          <h3 className="section-title">Your Puzzles</h3>
 
-        <div className="puzzle-list">
-          {puzzles.map((puzzle) => (
-            <div key={puzzle.id} className="puzzle-item">
-              <div>
+          <div className="puzzle-list">
+            {puzzles.map((puzzle) => (
+              <div key={puzzle.id} className="puzzle-item">
                 <h4>{puzzle.title}</h4>
-                <span className={`progress ${puzzle.progress.toLowerCase().replace(" ", "-")}`}>
-                  {puzzle.progress}
-                </span>
-              </div>
 
-              <button onClick={() => navigate(`/puzzle/${puzzle.id}`)}>
-                Open
-              </button>
-            </div>
-          ))}
+                <button onClick={() => navigate(puzzle.route)}>
+                  Start
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      */}
+
     </div>
   );
 }
