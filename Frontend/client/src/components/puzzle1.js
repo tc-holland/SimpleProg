@@ -10,7 +10,7 @@ const defaultData = {
         'fib(n):\n\tif ',
         { id: 2, correctWord: 'n' },
         '== 0:\n\t\treturn 0\n\telif n ',
-        { id: 3, correctWord: '== ' },
+        { id: 3, correctWord: '==' },
         ' 1:\n\t\treturn 1\n\telse:\n\t\treturn ',
         { id: 4, correctWord: 'fib' },
         '(n-1) + fib(n-2)',
