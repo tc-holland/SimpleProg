@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Signup.css";
+import "./Signup.css"
 import landingIcon from "../assets/testlogo.png"
 
 function TeacherSignup() {
@@ -10,7 +10,7 @@ function TeacherSignup() {
     const [signupFormData, setSignupFormData] = useState({
         username: "",
         password: "",
-        confirmPassword: "",
+        confirmPassword: ""
     });
 
     //stores backend response mesages
@@ -110,13 +110,13 @@ function TeacherSignup() {
                     required
                     />
 
-                    <label htmlFor="confirmpassword">Confirm Password:</label> {/* confirm PASSWORD LABEL AND INPUT */}
+                    <label htmlFor="confirmPassword">Confirm Password:</label> {/* confirm PASSWORD LABEL AND INPUT */}
                     <input
-                    id="confirmpassword"
-                    name="confirmpassword"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
                     placeholder="Confirm your password"
-                    value={signupFormData.confirmpassword}
+                    value={signupFormData.confirmPassword}
                     onChange={handleChange}
                     required
                     />
