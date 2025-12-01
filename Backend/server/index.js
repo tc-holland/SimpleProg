@@ -125,6 +125,156 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
+// Puzzle endpoints
+app.get("/api/puzzles/:id", async (req, res) => {
+  const { id } = req.params;
+  
+  // Default puzzle data as fallback
+  const defaultPuzzles = {
+    puzzle1: {
+      sentences: [
+        {
+          id: 1,
+          parts: [
+            { id: 1, correctWord: 'def' },
+            'fib(n):\n\tif ',
+            { id: 2, correctWord: 'n' },
+            '== 0:\n\t\treturn 0\n\telif n ',
+            { id: 3, correctWord: '== ' },
+            ' 1:\n\t\treturn 1\n\telse:\n\t\treturn ',
+            { id: 4, correctWord: 'fib' },
+            '(n-1) + fib(n-2)',
+          ],
+        },
+      ],
+      words: ['def', 'fib', 'n', '=='],
+    },
+    puzzle2: {
+      sentences: [
+        {
+          id: 1,
+          parts: [
+            'Line 1: ',
+            { id: 1, correctWord: 'def add(a, b)' },
+            '\nLine 2: \t',
+            { id: 2, correctWord: 'c = a + b' },
+            '\nLine 3: \t',
+            { id: 3, correctWord: 'return c' },
+          ],
+        },
+      ],
+      words: ['return c', 'def add(a, b)', 'c = a + b'],
+    },
+    puzzle3: {
+      sentences: [
+        {
+          id: 1,
+          parts: [
+            'Line 1: ',
+            { id: 1, correctWord: 'def isPalindrome(str):' },
+            '\nLine 2: \t',
+            { id: 2, correctWord: 'cleaned = ""' },
+            '\nLine 3: \t',
+            { id: 3, correctWord: 'for c in str.lower():' },
+            '\nLine 4: \t\t',
+            { id: 4, correctWord: 'if c.isalnum():' },
+            '\nLine 5: \t\t\t',
+            { id: 5, correctWord: 'cleaned += c' },
+            '\nLine 6: \t',
+            { id: 6, correctWord: 'return cleaned == cleaned[::-1]' },
+          ],
+        },
+      ],
+      words: [
+        'def isPalindrome(str):',
+        'cleaned = ""',
+        'for c in str.lower():',
+        'if c.isalnum():',
+        'cleaned += c',
+        'return cleaned == cleaned[::-1]',
+      ],
+    },
+  };
+  
+  try {
+    const { data, error } = await supabase
+      .from('puzzles')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    
+    if (error) {
+      console.error("Supabase fetch error:", error);
+      // Return default data on error
+      const defaultData = defaultPuzzles[id];
+      if (defaultData) {
+        return res.json({ data: defaultData });
+      }
+      return res.status(500).json({ message: "Failed to fetch puzzle", error });
+    }
+    
+    if (!data) {
+      // Return default data if not in database
+      const defaultData = defaultPuzzles[id];
+      if (defaultData) {
+        return res.json({ data: defaultData });
+      }
+      return res.status(404).json({ message: "Puzzle not found" });
+    }
+    
+    res.json({ data: JSON.parse(data.data) });
+  } catch (err) {
+    console.error("Error fetching puzzle:", err);
+    // Return default data on exception
+    const defaultData = defaultPuzzles[id];
+    if (defaultData) {
+      return res.json({ data: defaultData });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/api/puzzles/:id", async (req, res) => {
+  const { id } = req.params;
+  const { data } = req.body;
+  
+  if (!data) {
+    return res.status(400).json({ message: "Missing puzzle data" });
+  }
+  
+  try {
+    const { data: existing } = await supabase
+      .from('puzzles')
+      .select('id')
+      .eq('id', id)
+      .maybeSingle();
+    
+    let result;
+    if (existing) {
+      result = await supabase
+        .from('puzzles')
+        .update({ data: JSON.stringify(data) })
+        .eq('id', id)
+        .select();
+    } else {
+      result = await supabase
+        .from('puzzles')
+        .insert([{ id, data: JSON.stringify(data) }])
+        .select();
+    }
+    
+    if (result.error) {
+      console.error("Supabase update error:", result.error);
+      return res.status(500).json({ message: "Failed to save puzzle", error: result.error });
+    }
+    
+    res.json({ message: "Puzzle saved", success: true });
+  } catch (err) {
+    console.error("Error saving puzzle:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
