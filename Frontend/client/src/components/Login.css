@@ -64,7 +64,9 @@ button[type="submit"]:hover {
 }
 
 .signup-button {
-  position: relative;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background-color: #007bff;
   color: white;
   border: none;
