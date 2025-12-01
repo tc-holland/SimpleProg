@@ -98,10 +98,101 @@ app.post("/api/signup", async (req, res) => {
     // Hash password (async)
     const hash = await bcrypt.hash(password, saltRounds);
 
+    // Determine user role, validate it, and generate class code if necessary
+    const role = req.body.userRole || 'student';
+    if (role !== 'teacher' && role !== 'student') {
+      console.error('Invalid userRole provided:', req.body.userRole);
+      return res.status(400).json({ message: 'Invalid user role' });
+    }
+    const admin = role === 'teacher' ? 1 : 0;
+    let code = null;
+
+    // Behavior for teacher signups
+    if (admin) {
+      let unique = false;
+
+      while (!unique) {
+        let min = 100000;
+        let max = 999999;
+        code = Math.floor(Math.random() * (max - min + 1)) + min;
+        console.log("Generating class code:", code);
+
+        // check that code is unique in database and is added
+        const { data: generated, error: genError } = await supabase
+          .from('Classes')
+          .select('classCode')
+          .eq('classCode', code)
+          .maybeSingle();
+        
+        if (genError) {
+          console.error("Supabase class code generation error:", genError);
+          return res.status(500).json({ message: "Signup failed" });
+        }
+
+        if (generated) {
+          console.error("Generated class code already exists, regenerating:", code);
+        }
+        else {
+          unique = true;
+          // Insert new class into Classes table
+          const { data, error } = await supabase
+            .from('Classes')
+            .insert([{ classCode: code, students: [] }])
+            .select();
+          
+          if (error) {
+            console.error("Supabase insert class error:", error);
+            return res.status(500).json({ message: "Signup failed" });
+          }
+        }
+      }
+    }
+    else {
+      // Behavior for student signups
+      code = req.body.classCode;
+
+      // Validate presence of classCode
+      if (!code) {
+        console.error('Missing classCode in signup request');
+        return res.status(400).json({ message: 'Missing class code' });
+      }
+
+      // Fetch the class row and its students
+      const { data: classRow, error: classErr } = await supabase
+        .from('Classes')
+        .select('classCode, students')
+        .eq('classCode', code)
+        .maybeSingle();
+
+      if (classErr) {
+        console.error('Supabase class code check error:', classErr);
+        return res.status(500).json({ message: 'Signup failed' });
+      }
+
+      if (!classRow) {
+        console.error('Class code does not exist:', code);
+        return res.status(400).json({ message: 'Invalid class code' });
+      }
+
+      // Add student to target class
+      const newStudent = { username };
+      const updatedStudents = [...(classRow.students || []), newStudent];
+
+      const { error: updateError } = await supabase
+        .from('Classes')
+        .update({ students: updatedStudents })
+        .eq('classCode', code);
+
+      if (updateError) {
+        console.error('Supabase update students error:', updateError);
+        return res.status(500).json({ message: 'Signup failed' });
+      }
+    }
+
     // Insert new user and return the created row
     const { data, error } = await supabase
       .from('Users')
-      .insert([{ username: username, passwordHash: hash }])
+      .insert([{ username: username, passwordHash: hash, adminBit: admin, classCode: code }])
       .select();
 
     if (error) {

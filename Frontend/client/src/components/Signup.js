@@ -1,12 +1,11 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import "./Signup.css"
-import landingIcon from "../assets/testlogo.png"
 
 function Signup(){
     const navigate = useNavigate();
 
-    const[signupFormData, setSignupFormData] = useState({
+    const [signupFormData, setSignupFormData] = useState({
         username: "", 
         password: "", 
         confirmpassword: ""
@@ -44,7 +43,7 @@ function Signup(){
             const res = await fetch("/api/signup", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({username, password, userRole: "student"})
             });
 
             const result = await res.json();
