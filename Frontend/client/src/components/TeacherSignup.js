@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Signup.css"
+import "./Signup.css";
 import landingIcon from "../assets/testlogo.png"
 
 function TeacherSignup() {
@@ -10,7 +10,7 @@ function TeacherSignup() {
     const [signupFormData, setSignupFormData] = useState({
         username: "",
         password: "",
-        confirmPassword: ""
+        confirmpassword: "",
     });
 
     //stores backend response mesages
@@ -37,9 +37,9 @@ function TeacherSignup() {
         e.preventDefault();
 
         //frontend validation for matching passwords
-        const { username, password, confirmPassword } = signupFormData;
+        const { username, password, confirmpassword } = signupFormData;
 
-        if (password !== confirmPassword) {
+        if (password !== confirmpassword) {
             setResponseMessage("Passwords do not match.");
             return;
         }
@@ -110,13 +110,13 @@ function TeacherSignup() {
                     required
                     />
 
-                    <label htmlFor="confirmPassword">Confirm Password:</label> {/* confirm PASSWORD LABEL AND INPUT */}
+                    <label htmlFor="confirmpassword">Confirm Password:</label> {/* confirm PASSWORD LABEL AND INPUT */}
                     <input
-                    id="confirmPassword"
-                    name="confirmPassword"
+                    id="confirmpassword"
+                    name="confirmpassword"
                     type="password"
                     placeholder="Confirm your password"
-                    value={signupFormData.confirmPassword}
+                    value={signupFormData.confirmpassword}
                     onChange={handleChange}
                     required
                     />
