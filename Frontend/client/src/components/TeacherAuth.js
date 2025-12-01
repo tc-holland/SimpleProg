@@ -19,9 +19,12 @@ function TeacherAuth() {
         </button>
       </div>
 
-      <button onClick={() => navigate("/landing")}>
-        ⬅ Back
-      </button>
+      <button
+        className="back-button"
+        onClick={() => navigate("/landing")}
+        >
+            ← Back
+        </button>
     </div>
   );
 }

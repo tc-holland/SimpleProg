@@ -76,9 +76,6 @@ function TeacherSignup() {
     return(
         // MAIN WRAPPER DIV FOR ENTIRE PAGE
         <div className="signup-page">
-            <button type="button" className="login-button" 
-                    onClick={() => navigate("/login")}
-            >Log In</button>
 
 	{/* HOME BUTTON */}
 	<button type="button" className="home-button"
