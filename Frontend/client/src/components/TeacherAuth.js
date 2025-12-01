@@ -7,10 +7,17 @@ function TeacherAuth() {
 
   return (
     <div className="landing-page">
-      <h1>Teacher Setup</h1>
+      <h1>Teacher Access</h1>
       <p>Create a teacher account to generate a classroom code.</p>
 
       <div className="buttons">
+        <button
+          className="to-login"
+          onClick={() => navigate("/teacher-login")}
+        >
+          Log In
+        </button>
+
         <button
           className="to-signup"
           onClick={() => navigate("/teacher-signup")}

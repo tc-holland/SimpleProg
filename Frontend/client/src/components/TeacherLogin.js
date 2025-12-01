@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css"
 import landingIcon from "../assets/testlogo.png"
 
-function Login(){
+function TeacherLogin(){
     const navigate = useNavigate();
     const[loginFormData, setLoginFormData] = useState({
         username: "",
         password: "",
-        classCode: ""
     });
 
     const [data, setData] = React.useState(null);
@@ -28,19 +27,13 @@ function Login(){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {username, password, classCode} = loginFormData;
-
-        //make sure class code is 6 digits
-        if (classCode.length !== 6) {
-            setResponseMessage("Class code must be a 6 digit number.");
-            return;
-        }
+        const {username, password} = loginFormData;
 
         try {
             const res = await fetch("/api/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password, classCode})
+                body: JSON.stringify({username, password, userRole: "teacher"})
             });
 
             const result = await res.json();
@@ -51,13 +44,14 @@ function Login(){
             if (result.token) {
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
+                localStorage.setItem('userRole', 'teacher');
             }
             setResponseMessage(`${result.message}`);
-            navigate('/dashboard');
+            navigate('/teacher-dashboard');
             //FIXME navigate somewhere after successful login
         }
         catch (err) {
-            console.error("Login error:", err);
+            console.error("Teacher ogin error:", err);
             //FIXME err.message might expose server internals
             // setResponseMessage(`${err.message}`);
             setResponseMessage("Login failed. Check if your username and password are correct.");
@@ -68,7 +62,7 @@ function Login(){
         // MAIN WRAPPER DIV FOR ENTIRE PAGE
         <div className="login-page">
             <button type="button" className="signup-button" 
-                    onClick={() => navigate("/signup")}
+                    onClick={() => navigate("/teacher-signup")}
             >Sign Up</button>
 
 	{/* HOME BUTTON */}
@@ -78,7 +72,7 @@ function Login(){
 
             <div className="login-container">
                 {/* PAGE TITLE */}
-                <h1>Student Login</h1>
+                <h1>Teacher Login</h1>
 
                 {/* LOGIN FORM STARTS HERE */}
                 <form className="login-form" onSubmit={handleSubmit}>
@@ -104,17 +98,6 @@ function Login(){
                     required
                     />
 
-                    <label htmlFor="classCode">Class Code:</label>
-                    <input
-                    id="classCode"
-                    name="classCode"
-                    type="text"
-                    placeholder="Enter your class code"
-                    value={loginFormData.classCode}
-                    onChange={handleChange}
-                    required
-                    />
-
                     <button type="submit">Log In</button> {/* SUBMIT BUTTON */}
                 </form>
 
@@ -129,5 +112,4 @@ function Login(){
         </div>
     );
 }
-
-export default Login;
+export default TeacherLogin;

@@ -13,6 +13,7 @@ import TeacherSignup from "./components/TeacherSignup";
 import TeacherDashboard from "./components/TeacherDashboard";
 import StudentAuth from "./components/StudentAuth";
 import TeacherAuth from "./components/TeacherAuth";
+import TeacherLogin from "./components/TeacherLogin";
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/teacher-dashboard" element={<TeacherDashboard />}/>
         <Route path="/student/auth" element={<StudentAuth />}/>
         <Route path="/teacher/auth" element={<TeacherAuth />}/>
+        <Route path="/teacher-login" element={<TeacherLogin />}/>
         {/*Default route login*/}
         <Route path="*" element={<Navigate to="/landing" />} />
       </Routes>
