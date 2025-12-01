@@ -212,7 +212,7 @@ export default function Puzzle2() {
                     {showResults && allCorrect && (
                       <button
                         className="return-button"
-                        onClick={() => {}}
+                        onClick={() => navigate("/dashboard")}
                       >
                         Return to Dashboard
                       </button>
