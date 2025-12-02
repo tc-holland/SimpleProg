@@ -12,6 +12,7 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
   const [droppedWords, setDroppedWords] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [lockedBlanks, setLockedBlanks] = useState(new Set());
+  const [completionRecorded, setCompletionRecorded] = useState(false);
   const navigate = useNavigate();
 
   // Reset state when puzzle data changes (from backend updates)
@@ -19,6 +20,7 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
     setDroppedWords({});
     setShowResults(false);
     setLockedBlanks(new Set());
+    setCompletionRecorded(false);
   }, [puzzleData]);
 
   const InlineDraggableWord = ({ word }) => {
@@ -109,6 +111,44 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
       return true;
     })
   );
+
+  // Record puzzle completion when all answers are correct
+  useEffect(() => {
+    if (showResults && allCorrect && !completionRecorded && !isPreview) {
+      setCompletionRecorded(true);
+      recordCompletion();
+    }
+  }, [showResults, allCorrect, completionRecorded, isPreview]);
+
+  const recordCompletion = async () => {
+    try {
+      // Get userId from localStorage (set during login)
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.warn('No userId found, skipping completion record');
+        return;
+      }
+
+      // Extract puzzle ID from title (e.g., "puzzle1")
+      const puzzleId = title.toLowerCase().includes('puzzle') ? title.toLowerCase() : 'puzzle1';
+      
+      const response = await fetch(`http://localhost:3001/api/puzzles/${puzzleId}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to record completion:', response.statusText);
+        return;
+      }
+
+      const result = await response.json();
+      console.log('Completion recorded:', result);
+    } catch (err) {
+      console.error('Error recording completion:', err);
+    }
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>

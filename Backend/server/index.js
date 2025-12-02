@@ -58,7 +58,7 @@ app.post("/api/login", async (req, res) => {
   // Create JWT token (expires in 7 days)
   try {
     const token = jwt.sign({ sub: user.id || user.username, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ message: "Login successful!", user: username, success: true, token });
+    return res.json({ message: "Login successful!", user: username, userId: user.id, success: true, token });
   } catch (err) {
     console.error('Error creating token:', err);
     return res.status(500).json({ message: 'Login succeeded but token creation failed' });
@@ -363,6 +363,78 @@ app.post("/api/puzzles/:id", async (req, res) => {
   } catch (err) {
     console.error("Error saving puzzle:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Mark a puzzle as completed and increment levelCompleted if first completion
+app.post("/api/puzzles/:id/complete", async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+  
+  if (!userId) {
+    return res.status(400).json({ message: "Missing userId" });
+  }
+  
+  try {
+    // Get user's completed puzzles
+    const { data: user, error: userError } = await supabase
+      .from('Users')
+      .select('completed_puzzles, levelCompleted')
+      .eq('id', userId)
+      .maybeSingle();
+    
+    if (userError || !user) {
+      console.error("Failed to fetch user:", userError);
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Parse completed puzzles (assume it's stored as JSON string or array)
+    let completedPuzzles = [];
+    try {
+      if (user.completed_puzzles) {
+        completedPuzzles = typeof user.completed_puzzles === 'string' 
+          ? JSON.parse(user.completed_puzzles) 
+          : user.completed_puzzles;
+      }
+    } catch (e) {
+      console.error("Error parsing completed puzzles:", e);
+      completedPuzzles = [];
+    }
+    
+    // Check if puzzle was already completed
+    const alreadyCompleted = completedPuzzles.includes(id);
+    
+    // Add puzzle to completed list
+    if (!alreadyCompleted) {
+      completedPuzzles.push(id);
+    }
+    
+    // Update user with new completed puzzles and increment levelCompleted if first time
+    let updateData = { completed_puzzles: JSON.stringify(completedPuzzles) };
+    if (!alreadyCompleted) {
+      updateData.levelCompleted = (user.levelCompleted || 0) + 1;
+    }
+    
+    const { error: updateError } = await supabase
+      .from('Users')
+      .update(updateData)
+      .eq('id', userId);
+    
+    if (updateError) {
+      console.error("Failed to update user:", updateError);
+      return res.status(500).json({ message: "Failed to record completion", error: updateError.message });
+    }
+    
+    res.json({ 
+      message: "Puzzle completion recorded", 
+      levelIncremented: !alreadyCompleted,
+      newLevel: alreadyCompleted ? user.levelCompleted : (user.levelCompleted || 0) + 1,
+      levelCompleted: alreadyCompleted ? user.levelCompleted : (user.levelCompleted || 0) + 1,
+      completed_puzzles: completedPuzzles
+    });
+  } catch (err) {
+    console.error("Error recording puzzle completion:", err);
+    res.status(500).json({ message: "Internal server error", error: err.message });
   }
 });
 
