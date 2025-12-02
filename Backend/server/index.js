@@ -217,6 +217,8 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
+
+
 // Puzzle endpoints
 app.get("/api/puzzles/:id", async (req, res) => {
   const { id } = req.params;
