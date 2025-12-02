@@ -61,6 +61,9 @@ function TeacherSignup() {
                 localStorage.setItem('userEmail', username);
                 localStorage.setItem('userRole', 'teacher');
             }
+            if (result.classCode) {
+                localStorage.setItem('classCode', String(result.classCode));
+            }
 
             setResponseMessage(`${result.message}`);
             

@@ -27,13 +27,13 @@ function TeacherLogin(){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {username, password} = loginFormData;
+        const {username, password, classCode} = loginFormData;
 
         try {
             const res = await fetch("/api/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password, userRole: "teacher"})
+                body: JSON.stringify({username, password, userRole: "teacher", classCode})
             });
 
             const result = await res.json();
@@ -45,13 +45,14 @@ function TeacherLogin(){
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
                 localStorage.setItem('userRole', 'teacher');
+                localStorage.setItem('classCode', result.classCode);
             }
             setResponseMessage(`${result.message}`);
             navigate('/teacher-dashboard');
             //FIXME navigate somewhere after successful login
         }
         catch (err) {
-            console.error("Teacher ogin error:", err);
+            console.error("Teacher login error:", err);
             //FIXME err.message might expose server internals
             // setResponseMessage(`${err.message}`);
             setResponseMessage("Login failed. Check if your username and password are correct.");

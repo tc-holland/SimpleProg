@@ -62,6 +62,10 @@ function Signup(){
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
             }
+            if (result.classCode) {
+                localStorage.setItem('classCode', String(result.classCode));
+            }
+            localStorage.setItem('userRole', 'student');
             setResponseMessage(`${result.message}`);
             navigate('/dashboard');
         }

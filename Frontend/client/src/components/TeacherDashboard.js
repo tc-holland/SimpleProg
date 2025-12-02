@@ -6,36 +6,45 @@ function TeacherDashboard() {
     const navigate = useNavigate();
 
     //stores list of students in the teacher's class
-    const [students, setStudents] = useState([]);
+    const [studentList, setStudents] = useState([]);
     const [teacherEmail, setTeacherEmail] = useState("");
     const [classCode, setClassCode] = useState("");
     //const [notifications, setNotifications] = useState([]);
     //const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
-        const user = localStorage.getItem("userEmail");
-        const token = localStorage.getItem("authToken");
-        const userRole = localStorage.getItem("userRole");
+useEffect(() => {
+  const user = localStorage.getItem("userEmail");
+  const token = localStorage.getItem("authToken");
+  const userRole = localStorage.getItem("userRole");
 
-        //only allow access if user is logged in and is a teacher
-        if (!token || userRole !== "teacher"){
-            navigate("/login");
-            return;
-        }
+  // only allow access if user is logged in and is a teacher
+  if (!token || userRole !== "teacher") {
+    navigate("/login");
+    return;
+  }
 
-        if (user) setTeacherEmail(user);
+  if (user) setTeacherEmail(user);
 
-        //get list of students from backend
-        fetch(`/api/teacher-dashboard/${user}`)
-        .then(res => res.json())
-        .then(data => {
-            setClassCode(data.classCode || "");
-            setStudents(data.students || []);
-        })
-        .catch(err => {
-            console.error("Failed to fetch students:", err);
-        });
-    }, [navigate]);
+  // Try an immediate local value first so the UI shows the code instantly
+  const savedCode = localStorage.getItem('classCode');
+  if (savedCode) {
+    setClassCode(savedCode);
+  } else {
+    // fallback: fetch the class info from the backend
+    fetch(`/api/teacher-dashboard/${user}`, {
+      headers: { Authorization: `Bearer ${token}` } // if your route requires auth
+    })
+      .then(res => res.json())
+      .then(data => {
+        setClassCode(data.classCode || "");
+        setStudents(data.students || []);
+        if (data.classCode) localStorage.setItem('classCode', String(data.classCode));
+      })
+      .catch(err => {
+        console.error("Failed to fetch students:", err);
+      });
+  }
+}, [navigate]);
 
     return (
     <div className="dashboard-container">
@@ -71,11 +80,11 @@ function TeacherDashboard() {
       <div className="dashboard-card pastel-blue">
         <h3 className="section-title">📊 Students in Your Class</h3>
 
-        {students.length === 0 ? (
+        {studentList.length === 0 ? (
           <p>No students have joined yet.</p>
         ) : (
           <div className="puzzle-list">
-            {students.map((student, index) => (
+            {studentList.map((student, index) => (
               <div key={index} className="puzzle-item">
                 <h4>{student.username}</h4>
                 <span>Progress: Not tracked yet</span>
@@ -107,7 +116,7 @@ function TeacherDashboard() {
         <h3 className="section-title">📊 Student Progress</h3>
 
         <div className="puzzle-list">
-          {students.map((student, index) => (
+          {studentList.map((student, index) => (
             <div key={index} className="puzzle-item">
               <h4>{student.email}</h4>
               <span>Highest Level: {student.highestLevel}</span>
