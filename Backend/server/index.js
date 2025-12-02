@@ -137,7 +137,7 @@ app.post("/api/signup", async (req, res) => {
           // Insert new class into Classes table
           const { data, error } = await supabase
             .from('Classes')
-            .insert([{ classCode: code, students: [] }])
+            .insert([{ classCode: code, studentList: [] }])
             .select();
           
           if (error) {
@@ -157,10 +157,10 @@ app.post("/api/signup", async (req, res) => {
         return res.status(400).json({ message: 'Missing class code' });
       }
 
-      // Fetch the class row and its students
+      // Fetch the class row and its studentList
       const { data: classRow, error: classErr } = await supabase
         .from('Classes')
-        .select('classCode, students')
+        .select('classCode, studentList')
         .eq('classCode', code)
         .maybeSingle();
 
@@ -176,15 +176,15 @@ app.post("/api/signup", async (req, res) => {
 
       // Add student to target class
       const newStudent = { username };
-      const updatedStudents = [...(classRow.students || []), newStudent];
+      const updatedstudentList = [...(classRow.studentList || []), newStudent];
 
       const { error: updateError } = await supabase
         .from('Classes')
-        .update({ students: updatedStudents })
+        .update({ studentList: updatedstudentList })
         .eq('classCode', code);
 
       if (updateError) {
-        console.error('Supabase update students error:', updateError);
+        console.error('Supabase update studentList error:', updateError);
         return res.status(500).json({ message: 'Signup failed' });
       }
     }
