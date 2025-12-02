@@ -8,7 +8,8 @@ function Signup(){
     const [signupFormData, setSignupFormData] = useState({
         username: "", 
         password: "", 
-        confirmpassword: ""
+        confirmpassword: "",
+        classCode: ""
     });
     
     const [data, setData] = React.useState(null);
@@ -32,7 +33,13 @@ function Signup(){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {username, password, confirmpassword} = signupFormData;
+        const {username, password, confirmpassword, classCode} = signupFormData;
+
+        //make sure class code is 6 digits
+        if (classCode.length !== 6) {
+            setResponseMessage("Class code must be a 6 digit number.");
+            return;
+        }
 
         if (password !== confirmpassword) {
             setResponseMessage("Passwords do not match.");
@@ -43,7 +50,7 @@ function Signup(){
             const res = await fetch("/api/signup", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password, userRole: "student"})
+                body: JSON.stringify({username, password, userRole: "student", classCode})
             });
 
             const result = await res.json();
@@ -116,6 +123,18 @@ function Signup(){
                     onChange={handleChange}
                     required
                     />
+
+                    <label htmlFor="classCode">Class Code:</label>
+                    <input
+                    id="classCode"
+                    name="classCode"
+                    type="text"
+                    placeholder="Enter your class code"
+                    value={signupFormData.classCode}
+                    onChange={handleChange}
+                    required
+                    />
+
                     <button type="submit">Sign Up</button> {/* SUBMIT BUTTON */}
                 </form>
 

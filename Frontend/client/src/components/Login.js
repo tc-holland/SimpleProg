@@ -7,8 +7,7 @@ function Login(){
     const navigate = useNavigate();
     const[loginFormData, setLoginFormData] = useState({
         username: "",
-        password: "",
-        classCode: ""
+        password: ""
     });
 
     const [data, setData] = React.useState(null);
@@ -28,19 +27,13 @@ function Login(){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {username, password, classCode} = loginFormData;
-
-        //make sure class code is 6 digits
-        if (classCode.length !== 6) {
-            setResponseMessage("Class code must be a 6 digit number.");
-            return;
-        }
+        const {username, password} = loginFormData;
 
         try {
             const res = await fetch("/api/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password, classCode})
+                body: JSON.stringify({username, password})
             });
 
             const result = await res.json();
@@ -104,16 +97,6 @@ function Login(){
                     required
                     />
 
-                    <label htmlFor="classCode">Class Code:</label>
-                    <input
-                    id="classCode"
-                    name="classCode"
-                    type="text"
-                    placeholder="Enter your class code"
-                    value={loginFormData.classCode}
-                    onChange={handleChange}
-                    required
-                    />
 
                     <button type="submit">Log In</button> {/* SUBMIT BUTTON */}
                 </form>
