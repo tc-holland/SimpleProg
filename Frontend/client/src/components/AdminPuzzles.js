@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePuzzle } from '../hooks/usePuzzle';
 import Puzzle from './Puzzle';
 
@@ -69,6 +70,7 @@ const defaultPuzzles = {
 };
 
 export default function AdminPuzzles() {
+  const navigate = useNavigate();
   const [activeId, setActiveId] = useState('puzzle1');
   const { data, loading, error, savePuzzle } = usePuzzle(activeId, defaultPuzzles[activeId]);
   const [json, setJson] = useState(JSON.stringify(data, null, 2));
@@ -173,6 +175,19 @@ export default function AdminPuzzles() {
             }}
           >
             Reset to Default
+          </button>
+          <button
+            onClick={() => navigate('/teacher-dashboard')}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#22c55e',
+              color: 'white',
+              cursor: 'pointer',
+              border: 'none',
+              borderRadius: 4,
+            }}
+          >
+            ← Back to Dashboard
           </button>
         </div>
 

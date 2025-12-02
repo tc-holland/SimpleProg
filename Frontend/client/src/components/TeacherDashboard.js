@@ -8,8 +8,9 @@ function TeacherDashboard() {
     //stores list of students in the teacher's class
     const [students, setStudents] = useState([]);
     const [teacherEmail, setTeacherEmail] = useState("");
-    const [notifications, setNotifications] = useState([]);
-    const [messages, setMessages] = useState([]);
+    const [classCode, setClassCode] = useState("");
+    //const [notifications, setNotifications] = useState([]);
+    //const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         const user = localStorage.getItem("userEmail");
@@ -25,18 +26,11 @@ function TeacherDashboard() {
         if (user) setTeacherEmail(user);
 
         //get list of students from backend
-        fetch("/api/teacher/students", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        })
+        fetch(`/api/teacher-dashboard/${user}`)
         .then(res => res.json())
         .then(data => {
-            if (data.students) {
-                setStudents(data.students);
-            }
+            setClassCode(data.classCode || "");
+            setStudents(data.students || []);
         })
         .catch(err => {
             console.error("Failed to fetch students:", err);
@@ -64,6 +58,42 @@ function TeacherDashboard() {
           <h1 className="dashboard-title">Teacher Dashboard</h1>
           <h2 className="dashboard-user">{teacherEmail}</h2>
         </div>
+      </div>
+
+      {/* CLASS CODE */}
+      <div className="dashboard-card pastel-yellow">
+        <h3 className="section-title">🔑 Your Class Code</h3>
+        <p style={{fontSize: "26px", fontWeight: "bold"}}>{classCode}</p>
+        <p>Share this code with your students so they can join your class!</p>
+      </div>
+
+      {/* STUDENT LIST */}
+      <div className="dashboard-card pastel-blue">
+        <h3 className="section-title">📊 Students in Your Class</h3>
+
+        {students.length === 0 ? (
+          <p>No students have joined yet.</p>
+        ) : (
+          <div className="puzzle-list">
+            {students.map((student, index) => (
+              <div key={index} className="puzzle-item">
+                <h4>{student.username}</h4>
+                <span>Progress: Not tracked yet</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* PUZZLE EDITOR BUTTON */}
+      <div className="dashboard-card">
+        <h3 className="section-title">🧩 Puzzle Editor</h3>
+        <button
+          className="dashboard-button"
+          onClick={() => navigate("/admin/puzzles")}
+        >
+          Go to Puzzle Editor
+        </button>
       </div>
 
       {/* CLASSROOM INFO */}
