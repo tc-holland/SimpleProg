@@ -59,7 +59,7 @@ app.post("/api/login", async (req, res) => {
   try {
     const token = jwt.sign({ sub: user.id || user.username, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
     console.log(user.classCode);
-    return res.json({ message: "Login successful!", user: username, userId: user.id, success: true, token, classCode: user.classCode || null, studentList: user.studentList || null });
+    return res.json({ message: "Login successful!", user: username, userId: user.id, success: true, token, classCode: user.classCode || null });
   } catch (err) {
     console.error('Error creating token:', err);
     return res.status(500).json({ message: 'Login succeeded but token creation failed' });
@@ -206,7 +206,7 @@ app.post("/api/signup", async (req, res) => {
     // Create JWT for the new user
     try {
       const token = jwt.sign({ sub: createdUser.id || createdUser.username, username: createdUser.username }, JWT_SECRET, { expiresIn: '7d' });
-      return res.status(201).json({ message: "Signup successful!", user: username, success: true, token, classCode: createdUser.classCode || null, studentList: createdUser.studentList || null });
+      return res.status(201).json({ message: "Signup successful!", user: username, success: true, token, classCode: createdUser.classCode || null });
     } catch (err) {
       console.error('Error creating signup token:', err);
       return res.status(201).json({ message: "Signup successful!", user: username, success: true });
@@ -214,6 +214,33 @@ app.post("/api/signup", async (req, res) => {
   } catch (err) {
     console.error('Unexpected signup error:', err);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Get the list of students for a given class code
+app.get("/api/class/:classCode/students", async (req, res) => {
+  const { classCode } = req.params;
+
+  try {
+    const { data, error } = await supabase
+      .from("Classes")
+      .select("studentList")
+      .eq("classCode", Number(classCode))
+      .maybeSingle();
+
+    if (error) {
+      console.error("Fetch students error:", error);
+      return res.status(500).json({ message: "Failed to fetch students" });
+    }
+
+    if (!data) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    return res.json({ students: data.studentList || [] });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

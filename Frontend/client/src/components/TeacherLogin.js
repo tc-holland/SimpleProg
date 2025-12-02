@@ -27,13 +27,13 @@ function TeacherLogin(){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const {username, password, classCode} = loginFormData;
+        const {username, password} = loginFormData;
 
         try {
             const res = await fetch("/api/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({username, password, userRole: "teacher", classCode})
+                body: JSON.stringify({username, password, userRole: "teacher"})
             });
 
             const result = await res.json();
@@ -45,8 +45,11 @@ function TeacherLogin(){
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
                 localStorage.setItem('userRole', 'teacher');
-                localStorage.setItem('classCode', result.classCode);
-                localStorage.setItem('studentList', JSON.stringify(result.studentList || []));
+                //localStorage.setItem('classCode', result.classCode);
+                //localStorage.setItem('studentList', JSON.stringify(result.studentList || []));
+            }
+                if (result.classCode) {
+                localStorage.setItem('classCode', String(result.classCode));
             }
             setResponseMessage(`${result.message}`);
             navigate('/teacher-dashboard');

@@ -60,7 +60,7 @@ function TeacherSignup() {
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
                 localStorage.setItem('userRole', 'teacher');
-                localStorage.setItem('studentList', JSON.stringify(result.studentList || []));
+                //localStorage.setItem('studentList', JSON.stringify(result.studentList || []));
             }
             if (result.classCode) {
                 localStorage.setItem('classCode', String(result.classCode));
