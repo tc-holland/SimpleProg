@@ -59,7 +59,7 @@ app.post("/api/login", async (req, res) => {
   try {
     const token = jwt.sign({ sub: user.id || user.username, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
     console.log(user.classCode);
-    return res.json({ message: "Login successful!", user: username, userId: user.id, success: true, token, classCode: user.classCode || null });
+    return res.json({ message: "Login successful!", user: username, userId: user.id, success: true, token, classCode: user.classCode || null, studentList: user.studentList || null });
   } catch (err) {
     console.error('Error creating token:', err);
     return res.status(500).json({ message: 'Login succeeded but token creation failed' });
@@ -206,7 +206,7 @@ app.post("/api/signup", async (req, res) => {
     // Create JWT for the new user
     try {
       const token = jwt.sign({ sub: createdUser.id || createdUser.username, username: createdUser.username }, JWT_SECRET, { expiresIn: '7d' });
-      return res.status(201).json({ message: "Signup successful!", user: username, success: true, token, classCode: createdUser.classCode || null });
+      return res.status(201).json({ message: "Signup successful!", user: username, success: true, token, classCode: createdUser.classCode || null, studentList: createdUser.studentList || null });
     } catch (err) {
       console.error('Error creating signup token:', err);
       return res.status(201).json({ message: "Signup successful!", user: username, success: true });

@@ -46,6 +46,7 @@ function TeacherLogin(){
                 localStorage.setItem('userEmail', username);
                 localStorage.setItem('userRole', 'teacher');
                 localStorage.setItem('classCode', result.classCode);
+                localStorage.setItem('studentList', JSON.stringify(result.studentList || []));
             }
             setResponseMessage(`${result.message}`);
             navigate('/teacher-dashboard');
