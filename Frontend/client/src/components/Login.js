@@ -44,6 +44,7 @@ function Login(){
             if (result.token) {
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userEmail', username);
+                localStorage.setItem('userId', result.userId);
             }
             setResponseMessage(`${result.message}`);
             navigate('/dashboard');
