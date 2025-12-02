@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePuzzle } from '../hooks/usePuzzle';
 import Puzzle from './Puzzle';
@@ -76,6 +76,13 @@ export default function AdminPuzzles() {
   const [json, setJson] = useState(JSON.stringify(data, null, 2));
   const [saveError, setSaveError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Sync json when data changes (after fetch or after save)
+  useEffect(() => {
+    if (data) {
+      setJson(JSON.stringify(data, null, 2));
+    }
+  }, [data]);
 
   const handleApply = async () => {
     try {

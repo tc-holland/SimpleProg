@@ -1,6 +1,6 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DropZone } from './DropZone';
 import { CheckCircle2, XCircle, RotateCcw } from 'lucide-react';
 import { useDrag } from 'react-dnd';
@@ -13,6 +13,13 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
   const [showResults, setShowResults] = useState(false);
   const [lockedBlanks, setLockedBlanks] = useState(new Set());
   const navigate = useNavigate();
+
+  // Reset state when puzzle data changes (from backend updates)
+  useEffect(() => {
+    setDroppedWords({});
+    setShowResults(false);
+    setLockedBlanks(new Set());
+  }, [puzzleData]);
 
   const InlineDraggableWord = ({ word }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
