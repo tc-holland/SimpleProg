@@ -28,8 +28,7 @@ function Dashboard() {
         if (user) setEmail(user);
 
         setNotifications([
-            "Your puzzle 'Puzzle 1' is due tomorrow.",
-            "New puzzle 'Puzzle 4' has been added."
+            "No new notifications at this time."
         ]);
 
         setMessages([

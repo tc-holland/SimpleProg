@@ -520,6 +520,64 @@ app.post("/api/puzzles/:id/complete", async (req, res) => {
   }
 });
 
+// Remove a student from a teacher's class
+app.post("/api/remove-student", async (req, res) => {
+  const { teacherEmail, studentUsername } = req.body;
+
+  try {
+    //Get the teacher's class code
+    const { data: teacher, error: teacherError } = await supabase
+      .from("Users")
+      .select("classCode, adminBit")
+      .eq("username", teacherEmail)
+      .maybeSingle();
+
+    if (teacherError || !teacher || !teacher.adminBit) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    //Get the class row
+    const { data: classRow, error: classError } = await supabase
+      .from("Classes")
+      .select("studentList")
+      .eq("classCode", teacher.classCode)
+      .maybeSingle();
+
+    if (classError || !classRow) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    //Remove student from studentList
+    const updatedList = (classRow.studentList || []).filter(
+      (student) => student.username !== studentUsername
+    );
+
+    //Update class table
+    const { error: updateError } = await supabase
+      .from("Classes")
+      .update({ studentList: updatedList })
+      .eq("classCode", teacher.classCode);
+
+    if (updateError) {
+      return res.status(500).json({ message: "Failed to remove student" });
+    }
+
+    //Remove class code from student user row
+    await supabase
+      .from("Users")
+      .update({ classCode: null })
+      .eq("username", studentUsername);
+
+    res.json({ success: true, students: updatedList });
+
+  } catch (err) {
+    console.error("Remove student error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
