@@ -11,9 +11,9 @@ function Dashboard() {
     const [messages, setMessages] = useState([]);
 
     const [puzzles] = useState([
-            { id: 1, title: "Puzzle 1", route: "/puzzle1" },
-            { id: 2, title: "Puzzle 2", route: "/puzzle2" },
-            { id: 3, title: "Puzzle 3", route: "/puzzle3" }   
+            { id: 1, title: "Puzzle 1", route: "/puzzle1", name: "puzzle1" },
+            { id: 2, title: "Puzzle 2", route: "/puzzle2", name: "puzzle2" },
+            { id: 3, title: "Puzzle 3", route: "/puzzle3", name: "puzzle3" },   
         ]);
 
     useEffect(() => {
@@ -87,10 +87,12 @@ return (
             {puzzles.map((puzzle) => (
               <div key={puzzle.id} className="puzzle-item">
                 <h4>{puzzle.title}</h4>
-
-                <button onClick={() => navigate(puzzle.route)}>
-                  Start
-                </button>
+                <div className="puzzle-actions">
+                  
+                  <button onClick={() => navigate(puzzle.route)}>
+                    Start
+                  </button>
+                </div>
               </div>
             ))}
           </div>

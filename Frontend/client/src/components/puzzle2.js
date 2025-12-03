@@ -25,6 +25,7 @@ export default function Puzzle2() {
       puzzleData={data}
       title="Write a Function"
       subtitle="Drag each code segment to the correct line to make an addition function"
+      name ="puzzle2"
     />
   );
 }

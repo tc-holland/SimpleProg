@@ -27,6 +27,7 @@ export default function Puzzle1() {
       puzzleData={data}
       title="Fill in the Blanks"
       subtitle="Drag the words below into the correct blank spaces"
+      name ="puzzle1"
     />
   );
 }

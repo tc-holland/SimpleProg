@@ -7,7 +7,7 @@ import { useDrag } from 'react-dnd';
 import { useNavigate } from 'react-router-dom';
 import './puzzle1.css';
 
-export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subtitle, isPreview = false }) {
+export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subtitle, isPreview = false, name }) {
   const data = puzzleData || { sentences: [], words: [] };
   const [droppedWords, setDroppedWords] = useState({});
   const [showResults, setShowResults] = useState(false);
@@ -130,9 +130,8 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
       }
 
       // Extract puzzle ID from title (e.g., "puzzle1")
-      const puzzleId = title.toLowerCase().includes('puzzle') ? title.toLowerCase() : 'puzzle1';
-      
-      const response = await fetch(`http://localhost:3001/api/puzzles/${puzzleId}/complete`, {
+           
+      const response = await fetch(`http://localhost:3001/api/puzzles/${name}/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId }),
