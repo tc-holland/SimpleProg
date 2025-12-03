@@ -27,6 +27,22 @@ function Dashboard() {
 
         if (user) setEmail(user);
 
+      // Fetch user info (completed puzzles) from backend
+      (async () => {
+        try {
+          const resp = await fetch('/api/me', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (resp.ok) {
+            const json = await resp.json();
+            const completed = json.completed_puzzles || [];
+            localStorage.setItem('completedPuzzles', JSON.stringify(completed));
+          }
+        } catch (e) {
+          console.warn('Failed to fetch /api/me:', e);
+        }
+      })();
+
         setNotifications([
             "Your puzzle 'Puzzle 1' is due tomorrow.",
             "New puzzle 'Puzzle 4' has been added."
@@ -84,17 +100,21 @@ return (
           <h3 className="section-title">Your Puzzles</h3>
 
           <div className="puzzle-list">
-            {puzzles.map((puzzle) => (
-              <div key={puzzle.id} className="puzzle-item">
-                <h4>{puzzle.title}</h4>
-                <div className="puzzle-actions">
-                  
-                  <button onClick={() => navigate(puzzle.route)}>
-                    Start
-                  </button>
+            {puzzles.map((puzzle) => {
+              const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]').includes(puzzle.name);
+              return (
+                <div key={puzzle.id} className="puzzle-item">
+                  <h4>
+                    {puzzle.title} {completed && <span style={{color: 'green', marginLeft: 8}}>✓ completed</span>}
+                  </h4>
+                  <div className="puzzle-actions">
+                    <button onClick={() => navigate(puzzle.route)}>
+                      Start
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

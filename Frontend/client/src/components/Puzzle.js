@@ -122,19 +122,17 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
 
   const recordCompletion = async () => {
     try {
-      // Get userId from localStorage (set during login)
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.warn('No userId found, skipping completion record');
+      // Use auth token (set during login) to authenticate the request
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.warn('No auth token found, skipping completion record');
         return;
       }
 
-      // Extract puzzle ID from title (e.g., "puzzle1")
-           
-      const response = await fetch(`http://localhost:3001/api/puzzles/${name}/complete`, {
+      const response = await fetch(`/api/puzzles/${name}/complete`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) {
@@ -144,6 +142,14 @@ export default function Puzzle({ puzzleData, title = 'Fill in the Blanks', subti
 
       const result = await response.json();
       console.log('Completion recorded:', result);
+      // Persist locally for immediate dashboard reference
+      const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]');
+      if (!completed.includes(name)) {
+        completed.push(name);
+        localStorage.setItem('completedPuzzles', JSON.stringify(completed));
+      }
+      // also set a per-puzzle flag
+      localStorage.setItem(`puzzle_${name}_completed`, 'true');
     } catch (err) {
       console.error('Error recording completion:', err);
     }
