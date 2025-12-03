@@ -14,13 +14,13 @@ function TeacherDashboard() {
     
     const fetchStudents = (code) => {
       if (!code) return;
-      fetch(`/api/class/${code}/students`)
+      fetch(`/api/class/${code}/progress`)
         .then(res => res.json())
         .then(data => {
           setStudents(data.students || []);
         })
         .catch(err => {
-          console.error("Failed to fetch students:", err);
+          console.error("Failed to fetch student progress:", err);
         });
     };
 
@@ -102,11 +102,38 @@ useEffect(() => {
             {studentList.map((student, index) => (
               <div key={index} className="puzzle-item">
                 <h4>{student.username}</h4>
-                <span>Progress: Not tracked yet</span>
+                {/* <span>Progress: Not tracked yet</span> */}
               </div>
             ))}
           </div>
         )}
+      </div>
+
+      {/* STUDENT PROGRESS */}
+      <div className="dashboard-card pastel-blue">
+        <h3 className="section-title">📊 Students Progress</h3>
+          <div className="puzzle-list">
+            {studentList.map((student, index) => (
+              <div key={index} className="puzzle-item">
+                <h4>{student.username}</h4>
+                <p>
+                ✅ Puzzles Completed: {student.puzzlesCompleted}
+                </p>
+
+                <p>🧩 Completed:</p>
+
+                {student.completedPuzzles.length === 0 ? (
+                  <span>None yet</span>
+                ) : (
+                  <ul>
+                    {student.completedPuzzles.map((puzzle, i) => (
+                     <li key={i}>{puzzle}</li>
+                    ))}
+                </ul>
+                )}
+            </div>
+            ))}
+        </div>
       </div>
 
       {/* PUZZLE EDITOR BUTTON */}
@@ -118,27 +145,6 @@ useEffect(() => {
         >
           Go to Puzzle Editor
         </button>
-      </div>
-
-      {/* CLASSROOM INFO */}
-      <div className="dashboard-card pastel-yellow">
-        <h3 className="section-title">🏫 Your Classroom</h3>
-        <p>Below is your student progress overview.</p>
-      </div>
-
-      {/* STUDENT PROGRESS LIST */}
-      <div className="dashboard-card pastel-blue">
-        <h3 className="section-title">📊 Student Progress</h3>
-
-        <div className="puzzle-list">
-          {studentList.map((student, index) => (
-            <div key={index} className="puzzle-item">
-              <h4>{student.username}</h4>
-              {/* <span>Highest Level: {student.highestLevel}</span> */}
-              <span>Highest Level: Coming soon</span>
-            </div>
-          ))}
-        </div>
       </div>
 
     </div>

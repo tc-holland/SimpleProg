@@ -244,6 +244,58 @@ app.get("/api/class/:classCode/students", async (req, res) => {
   }
 });
 
+// Get student progress for a given class
+app.get("/api/class/:classCode/progress", async (req, res) => {
+  const { classCode } = req.params;
+
+  try {
+    //Get students from Classes table
+    const { data: classRow, error: classError } = await supabase
+      .from("Classes")
+      .select("studentList")
+      .eq("classCode", Number(classCode))
+      .maybeSingle();
+
+    if (classError || !classRow) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    const students = classRow.studentList || [];
+    const usernames = students.map(s => s.username);
+
+    if (usernames.length === 0) {
+      return res.json({ students: [] });
+    }
+
+    //Get progress from Users table
+    const { data: userRows, error: userError } = await supabase
+      .from("Users")
+      .select("username, completed_puzzles, levelCompleted")
+      .in("username", usernames);
+
+    if (userError) {
+      console.error("Progress fetch error:", userError);
+      return res.status(500).json({ message: "Failed to fetch progress" });
+    }
+
+    //Format the response
+    const formatted = userRows.map(user => ({
+      username: user.username,
+      puzzlesCompleted: user.levelCompleted || 0,
+      completedPuzzles: user.completed_puzzles
+        ? typeof user.completed_puzzles === "string"
+          ? JSON.parse(user.completed_puzzles)
+          : user.completed_puzzles
+        : []
+    }));
+
+    return res.json({ students: formatted });
+
+  } catch (err) {
+    console.error("Progress route error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 // Puzzle endpoints
