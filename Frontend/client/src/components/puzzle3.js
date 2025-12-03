@@ -38,6 +38,7 @@ export default function Puzzle3() {
       puzzleData={data}
       title="Write a Function"
       subtitle="Drag each code segment to the correct line to write a function that checks for palindromes in a word"
+      name ="puzzle3"
     />
   );
 }

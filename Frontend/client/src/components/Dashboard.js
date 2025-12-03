@@ -11,9 +11,9 @@ function Dashboard() {
     const [messages, setMessages] = useState([]);
 
     const [puzzles] = useState([
-            { id: 1, title: "Puzzle 1", route: "/puzzle1" },
-            { id: 2, title: "Puzzle 2", route: "/puzzle2" },
-            { id: 3, title: "Puzzle 3", route: "/puzzle3" }   
+            { id: 1, title: "Puzzle 1", route: "/puzzle1", name: "puzzle1" },
+            { id: 2, title: "Puzzle 2", route: "/puzzle2", name: "puzzle2" },
+            { id: 3, title: "Puzzle 3", route: "/puzzle3", name: "puzzle3" },   
         ]);
 
     useEffect(() => {
@@ -26,6 +26,22 @@ function Dashboard() {
         }
 
         if (user) setEmail(user);
+
+      // Fetch user info (completed puzzles) from backend
+      (async () => {
+        try {
+          const resp = await fetch('/api/me', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (resp.ok) {
+            const json = await resp.json();
+            const completed = json.completed_puzzles || [];
+            localStorage.setItem('completedPuzzles', JSON.stringify(completed));
+          }
+        } catch (e) {
+          console.warn('Failed to fetch /api/me:', e);
+        }
+      })();
 
         setNotifications([
             "No new notifications at this time."
@@ -83,15 +99,21 @@ return (
           <h3 className="section-title">Your Puzzles</h3>
 
           <div className="puzzle-list">
-            {puzzles.map((puzzle) => (
-              <div key={puzzle.id} className="puzzle-item">
-                <h4>{puzzle.title}</h4>
-
-                <button onClick={() => navigate(puzzle.route)}>
-                  Start
-                </button>
-              </div>
-            ))}
+            {puzzles.map((puzzle) => {
+              const completed = JSON.parse(localStorage.getItem('completedPuzzles') || '[]').includes(puzzle.name);
+              return (
+                <div key={puzzle.id} className="puzzle-item">
+                  <h4>
+                    {puzzle.title} {completed && <span style={{color: 'green', marginLeft: 8}}>✓ completed</span>}
+                  </h4>
+                  <div className="puzzle-actions">
+                    <button onClick={() => navigate(puzzle.route)}>
+                      Start
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
